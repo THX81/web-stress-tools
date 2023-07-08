@@ -1,0 +1,18 @@
+[package]
+name = "web-stress-tools"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+addr = "0.15.6"
+confy = "0.5.1"
+console = "0.15.7"
+#headless_chrome = {git = "https://github.com/atroche/rust-headless-chrome", features = ["fetch"]}
+indicatif = "0.17.5"
+no_browser = "0.3.0"
+rand = "0.8.5"
+serde = "1.0.164"
+serde_derive = "1.0.164"
+url = "2.4.0"
