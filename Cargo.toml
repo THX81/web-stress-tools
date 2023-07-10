@@ -7,6 +7,7 @@ edition = "2021"
 
 [dependencies]
 addr = "0.15.6"
+clap = "4.3.11"
 confy = "0.5.1"
 console = "0.15.7"
 #headless_chrome = {git = "https://github.com/atroche/rust-headless-chrome", features = ["fetch"]}

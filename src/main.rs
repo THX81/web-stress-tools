@@ -1,23 +1,16 @@
-use std::env;
 use std::error::Error;
-use std::io::{self, Write};
+use std::io::Write;
 use std::thread::{self, JoinHandle};
 use std::time::{Duration, Instant};
 
-use addr::{parse_dns_name, parse_domain_name};
+use addr::parse_domain_name;
 
-use console::Style;
+use console::Emoji;
 use console::Term;
-use console::{style, Emoji};
 use indicatif::{HumanDuration, MultiProgress, ProgressBar, ProgressStyle};
-use rand::seq::SliceRandom;
-use rand::Rng;
 use serde_derive::{Deserialize, Serialize};
 
-//use headless_chrome::browser::Tab;
-//use headless_chrome::Browser;
-
-use url::{Host, Position, Url};
+use url::Url;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 struct Config {
@@ -77,27 +70,9 @@ fn main() -> Result<(), ::std::io::Error> {
         let t_cfg: Config = cfg.clone();
 
         let join_handle = thread::spawn(move || {
-            //let term_inner = Term::stdout();
-            //let _ = term_inner.write_line(&format!("Thread {} started.", i));
-
-            /*for x in 0..count {
-                thread::sleep(Duration::from_millis(rand::thread_rng().gen_range(25..200)));
-                pb.set_message(format!("{x}: {count}"));
-                //pb.inc(1);
-            }*/
-
             let _ = browse(&pb, &t_cfg);
 
-            //thread::sleep(Duration::from_millis(1000 - i as u64 * 100));
-
-            if i == 3 {
-                //println!("Thread {} panic.", i);
-                //panic!();
-            }
-
             pb.finish_with_message("done...");
-
-            //println!("Thread {} finished.", i);
 
             // Signal that we are finished.
             // This will wake up the main thread.
@@ -121,25 +96,12 @@ fn main() -> Result<(), ::std::io::Error> {
         println!("{} joined.", i);
     }*/
 
-    //let cyan = Style::new().cyan();
-    //println!("This is {} neat", cyan.apply_to("quite"));
-
-    //term.write_line("Hello World!");
-    //thread::sleep(Duration::from_millis(2000));
-    //term.clear_line();
-
-    //let _ = browse_domain();
     loop {
-        //thread::sleep(Duration::from_millis(5000));
         let quit = wait_for_quitkey(&term);
         if quit {
             break;
         }
     }
-
-    //for tj in thread_handles.into_iter() {
-    //    let _ = tj.unwrap().join();
-    //}
 
     while thread_handles.len() > 0 {
         let cur_thread = thread_handles.remove(0); // moves it into cur_thread
@@ -147,10 +109,6 @@ fn main() -> Result<(), ::std::io::Error> {
         handle_thread_result(r);
     }
 
-    //while let Some(cur_thread) = thread_handles.pop() {
-    //    let _ = cur_thread.unwrap().join();
-    //}
-    //m.clear().unwrap();
     println!("{} Done in {}", "*", HumanDuration(started.elapsed()));
     Ok(())
 }
@@ -195,70 +153,6 @@ fn get_config() -> Config {
 
     return cfg;
 }
-
-/*fn get_attr(elt: &headless_chrome::Element, attr: &str) -> String {
-    let attributes = elt.get_attributes();
-
-    let mut is_match = false;
-
-    if let Ok(Some(array)) = attributes {
-        for item in array.iter() {
-            if is_match {
-                return item.to_string();
-            }
-            if item == attr {
-                is_match = true;
-            }
-        }
-    }
-
-    return "".to_string();
-}*/
-
-/*fn extract_links(tab: &Tab, cfg: &Config) -> Vec<String> {
-    let mut result = Vec::new();
-    if let Ok(elems) = tab.wait_for_elements("a[href]") {
-        let start_url = Url::parse(cfg.start_url.as_str()).unwrap();
-        let start_domain = parse_domain_name(start_url.host_str().unwrap()).unwrap();
-        let start_domain_prefix = start_domain.prefix();
-        let start_domain_root = start_domain.root().unwrap();
-
-        for elem in elems {
-            let link = get_attr(&elem, "href");
-            let url_result = Url::parse(link.as_str());
-            match url_result {
-                Ok(_) => (),
-                Err(_) => continue,
-            }
-
-            let url = url_result.unwrap();
-            let scheme = url.scheme();
-            let host = url.host_str();
-            match host {
-                Some(_) => (),
-                None => continue,
-            }
-            let domain = parse_domain_name(host.unwrap()).unwrap();
-            let domain_prefix = domain.prefix();
-            let domain_root = domain.root().unwrap();
-
-            if scheme != "http" && scheme != "https" {
-                continue;
-            }
-
-            if cfg.only_same_domain && domain_root != start_domain_root {
-                continue;
-            }
-
-            if cfg.only_same_sub_domain && domain_prefix != start_domain_prefix {
-                continue;
-            }
-
-            result.push(link);
-        }
-    }
-    result
-}*/
 
 fn extract_links(page: &no_browser::page::Page, cfg: &Config) -> Vec<String> {
     let mut result = Vec::new();
@@ -310,16 +204,13 @@ fn browse(pb: &ProgressBar, cfg: &Config) -> Result<(), Box<dyn Error>> {
     pb.set_message("Loading chrome...");
     pb.inc(1);
     let browser = no_browser::Browser::builder().finish()?;
-    //let browser = Browser::default()?;
-    //let _ = browser.wait_for_initial_tab().unwrap();
     pb.inc(1);
 
-    //let tab = browser.new_tab()?;
     let depth: u16 = 0;
     pb.inc(1);
 
     loop {
-        browse_recursive(&cfg.start_url, depth, &browser /*&tab*/, &pb, &cfg);
+        browse_recursive(&cfg.start_url, depth, &browser, &pb, &cfg);
         pb.inc(1);
         if !cfg.repeat {
             break;
@@ -332,8 +223,7 @@ fn browse(pb: &ProgressBar, cfg: &Config) -> Result<(), Box<dyn Error>> {
 fn browse_recursive(
     url: &str,
     depth: u16,
-    browser: &no_browser::browser::Browser, /*&Browser*/
-    /*tab: &Tab*/
+    browser: &no_browser::browser::Browser,
     pb: &ProgressBar,
     cfg: &Config,
 ) {
@@ -341,14 +231,11 @@ fn browse_recursive(
         return;
     }
 
-    // Navigate to the url
     pb.set_message(format!("Loading {}", url));
     //println!("Loading {}", url);
-
     pb.inc(1);
-    //let tab = browser.new_tab().unwrap();
 
-    //let tab = browser.new_tab().unwrap();
+    // Navigate to the url
     let page = browser.navigate_to(url, None);
     match page {
         Ok(_) => (),
@@ -358,69 +245,8 @@ fn browse_recursive(
         }
     }
 
-    //dbg!(page);
-    //if let Err(e) = tab.navigate_to(url) {
-    //    dbg!(e);
-    //}
-
-    //if let Err(e) = tab.wait_until_navigated() {
-    //    dbg!(e);
-    //}
-
-    //let nav = tab.navigate_to(url);
-    //let _ = tab.wait_for_element("body");
-    //match nav {
-    //    Ok(n) => match n.get_title() {
-    //        Ok(t) => println!("title: {}", t),
-    //        Err(e) => println!("title err: {}", e),
-    //    },
-    //    Err(e) => println!("nav err: {}", e),
-    //}
-    //println!("title: {}", title);
-    //println!("{}", nav.unwrap().get_document().unwrap());
-
     thread::sleep(Duration::from_millis(u64::from(cfg.wait_miliseconds)));
     pb.inc(1);
-
-    //TODO: we can do something on the page...
-    // Wait for network/javascript/dom to make the search-box available
-    // and click it.
-    //tab.wait_for_element("input#searchInput")?.click()?;
-
-    // Type in a query and press `Enter`
-    //tab.type_str("WebKit")?.press_key("Enter")?;
-
-    //println!("{:#?}", elems);
-    //assert!(tab.get_url().ends_with("WebKit"));
-
-    // Take a screenshot of the entire browser window
-    //let _jpeg_data =
-    //    tab.capture_screenshot(Page::CaptureScreenshotFormatOption::Jpeg, None, None, true)?;
-
-    // Take a screenshot of just the WebKit-Infobox
-    //let _png_data = tab
-    //    .wait_for_element("#mw-content-text > div > table.infobox.vevent")?
-    //    .capture_screenshot(Page::CaptureScreenshotFormatOption::Png)?;
-
-    // Run JavaScript in the page
-    //let remote_object = elem.call_js_fn(
-    //    r#"
-    //    function getIdTwice () {
-    //        // `this` is always the element that you called `call_js_fn` on
-    //        const id = this.id;
-    //        return id + id;
-    //    }
-    //"#,
-    //    vec![],
-    //    false,
-    //)?;
-    //match remote_object.value {
-    //    Some(returned_string) => {
-    //        dbg!(&returned_string);
-    //        assert_eq!(returned_string, "firstHeadingfirstHeading".to_string());
-    //    }
-    //    _ => unreachable!(),
-    //};
 
     let next_depth: u16 = depth + 1;
     if next_depth > cfg.target_depth {
@@ -428,22 +254,12 @@ fn browse_recursive(
     }
 
     let links = extract_links(&page.unwrap(), &cfg);
-    //let links = extract_links(&tab, &cfg);
 
-    //println!("{}", links.len());
     pb.set_message(format!("found {} links", links.len()));
     pb.inc(1);
     pb.inc(1);
 
-    //if let Err(e) = tab.close(false) {
-    //    dbg!(e);
-    //}
-
     for link in links {
-        //pb.set_message(format!("{}", link));
-        //pb.inc(1);
-        //println!();
-        //thread::sleep(Duration::from_millis(rand::thread_rng().gen_range(25..100)));
-        browse_recursive(&link, next_depth, &browser /*&tab*/, &pb, &cfg);
+        browse_recursive(&link, next_depth, &browser, &pb, &cfg);
     }
 }
