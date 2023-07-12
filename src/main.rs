@@ -16,6 +16,10 @@ use serde_derive::{Deserialize, Serialize};
 
 use url::Url;
 
+const VERSION: Option<&str> = option_env!("CARGO_PKG_VERSION");
+const AUTHOR: Option<&str> = option_env!("CARGO_PKG_AUTHORS");
+const ABOUT: Option<&str> = option_env!("CARGO_PKG_DESCRIPTION");
+
 #[derive(Debug, Serialize, Deserialize, Clone)]
 struct RunConfig {
     url: Option<String>,           // = "https://www.google.com/",
@@ -145,9 +149,9 @@ fn get_config() -> RunConfig {
     let mut run_cfg: RunConfig = RunConfig::default();
 
     let matches = Command::new("Web Stress Tools")
-        .version("0.5.4")
-        .author("Richard Straka <richard.straka@gmail.com>")
-        .about("Generating synthetic web traffic for your app to help with benchmarking and debuging of performance issues.")
+        .version(VERSION.unwrap_or("unknown"))
+        .author(AUTHOR.unwrap_or("Richard Straka <richard.straka@gmail.com>"))
+        .about(ABOUT.unwrap_or("Generating synthetic web traffic for your app to help with benchmarking and debuging of performance issues."))
         // These two arguments are part of the "target" group which is required
         .arg(
             arg!(-u --"url" <URL> "starting URL for recursive browsing through extracted links on pages")
