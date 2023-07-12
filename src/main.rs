@@ -145,9 +145,9 @@ fn get_config() -> RunConfig {
     let mut run_cfg: RunConfig = RunConfig::default();
 
     let matches = Command::new("Web Stress Tools")
-        .version("0.5.0")
+        .version("0.5.1")
         .author("Richard Straka <richard.straka@gmail.com>")
-        .about("Generating synthetic web trafic for your app to help with benchmarking and debuging of performance issues.")
+        .about("Generating synthetic web traffic for your app to help with benchmarking and debuging of performance issues.")
         // These two arguments are part of the "target" group which is required
         .arg(
             arg!(-u --"url" <URL> "starting URL for recursive browsing through extracted links on pages")
