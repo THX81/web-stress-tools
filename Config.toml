@@ -1,8 +1,7 @@
-start_url = "https://www.iglucruise.com/"
-only_same_domain = true
-only_same_sub_domain = true
-target_depth = 1
-repeat = false
-users = 2
-wait_miliseconds = 500
+same_domain = true
+same_sub_domain = true
+depth = 1
+repeat = 1
+users = 1
+wait_ms = 100
 
