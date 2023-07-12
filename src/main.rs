@@ -145,7 +145,7 @@ fn get_config() -> RunConfig {
     let mut run_cfg: RunConfig = RunConfig::default();
 
     let matches = Command::new("Web Stress Tools")
-        .version("0.5.1")
+        .version("0.5.2")
         .author("Richard Straka <richard.straka@gmail.com>")
         .about("Generating synthetic web traffic for your app to help with benchmarking and debuging of performance issues.")
         // These two arguments are part of the "target" group which is required
