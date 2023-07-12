@@ -19,9 +19,13 @@ Generally, the command line arguments have higher priority and overriding config
 ## About
 
 Main purpose of this app is to help with stress testing and also for me to learn Rust language. 
-I was using various applications to generate synthetic traffic in the past. MS Web Stress Tools long time ago, Selenium, WGET. 
-Problem I'm trying to solve is to have simple and easy to use application which would be able to simulate traffic. I want to keep it simple as WGET is but also introduce advanced features like parallel users. 
-I've faced problems with rust headless_chrome so the initial version is using simple web requests to the server. I the future I would like to add headless chrome or different engine which will be able to process JS on the page and interact with it to simulate browsing more realistically. 
+I was using various applications to generate synthetic traffic in the past. MS Web Stress Tools long time ago, Selenium or WGET. 
+
+Problem I'm trying to solve is to have simple and easy to use application which would be able to simulate realistic traffic. 
+I want to keep it simple as WGET is but also introduce advanced features like parallel users. 
+
+I've faced problems with rust headless_chrome so the initial version is using simple web requests to the server. 
+Adding headless chrome or different engine is the main goal for the future version. 
 
 ## TO-DO
 
