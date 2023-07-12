@@ -145,7 +145,7 @@ fn get_config() -> RunConfig {
     let mut run_cfg: RunConfig = RunConfig::default();
 
     let matches = Command::new("Web Stress Tools")
-        .version("0.5.3")
+        .version("0.5.4")
         .author("Richard Straka <richard.straka@gmail.com>")
         .about("Generating synthetic web traffic for your app to help with benchmarking and debuging of performance issues.")
         // These two arguments are part of the "target" group which is required
@@ -267,6 +267,7 @@ fn extract_links(page: &no_browser::page::Page, cfg: &RunConfig) -> Vec<String> 
     let mut result = Vec::new();
     if let Ok(elems) = page.select("a[href]") {
         let start_url = Url::parse(cfg.url.as_ref().unwrap().as_str()).unwrap();
+        let start_url_scheme = start_url.scheme();
         let start_domain = parse_domain_name(start_url.host_str().unwrap()).unwrap();
         let start_domain_prefix = start_domain.prefix();
         let start_domain_root = start_domain.root().unwrap_or(start_domain.as_str());
@@ -291,6 +292,10 @@ fn extract_links(page: &no_browser::page::Page, cfg: &RunConfig) -> Vec<String> 
             let domain_root = domain.root().unwrap_or(domain.as_str());
 
             if scheme != "http" && scheme != "https" {
+                continue;
+            }
+
+            if scheme != start_url_scheme {
                 continue;
             }
 
@@ -367,8 +372,6 @@ fn browse_recursive(
             return;
         }
     }
-
-    wait_with_random(cfg.config.wait_ms);
     pb.inc(1);
 
     let next_depth: u16 = depth + 1;
@@ -376,10 +379,13 @@ fn browse_recursive(
         return;
     }
 
+    wait_with_random(cfg.config.wait_ms);
+
     let links = extract_links(&page.unwrap(), &cfg);
 
     pb.set_message(format!("found {} links", links.len()));
     pb.inc(1);
+    wait_with_random(500);
     pb.inc(1);
 
     for link in links {
