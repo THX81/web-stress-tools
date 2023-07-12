@@ -269,7 +269,7 @@ fn extract_links(page: &no_browser::page::Page, cfg: &RunConfig) -> Vec<String> 
         let start_url = Url::parse(cfg.url.as_ref().unwrap().as_str()).unwrap();
         let start_domain = parse_domain_name(start_url.host_str().unwrap()).unwrap();
         let start_domain_prefix = start_domain.prefix();
-        let start_domain_root = start_domain.root().unwrap();
+        let start_domain_root = start_domain.root().unwrap_or(start_domain.as_str());
 
         for elem in elems {
             let link = elem.value().attr("href").get_or_insert("").to_string();
@@ -288,7 +288,7 @@ fn extract_links(page: &no_browser::page::Page, cfg: &RunConfig) -> Vec<String> 
             }
             let domain = parse_domain_name(host.unwrap()).unwrap();
             let domain_prefix = domain.prefix();
-            let domain_root = domain.root().unwrap();
+            let domain_root = domain.root().unwrap_or(domain.as_str());
 
             if scheme != "http" && scheme != "https" {
                 continue;
