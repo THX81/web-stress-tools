@@ -277,7 +277,15 @@ fn extract_links(page: &no_browser::page::Page, cfg: &RunConfig) -> Vec<String> 
         let start_domain_root = start_domain.root().unwrap_or(start_domain.as_str());
 
         for elem in elems {
-            let link = elem.value().attr("href").get_or_insert("").to_string();
+            let link: String;
+            let href = elem.value().attr("href").get_or_insert("").to_string();
+
+            if href.starts_with("/") {
+                link = start_url.join(href.as_str()).unwrap().to_string();
+            } else {
+                link = href;
+            }
+
             let url_result = Url::parse(link.as_str());
             match url_result {
                 Ok(_) => (),
