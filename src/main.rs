@@ -11,6 +11,8 @@ use clap::{arg, value_parser, Command};
 
 use console::Term;
 use indicatif::{HumanDuration, MultiProgress, ProgressBar, ProgressStyle};
+use rand::seq::SliceRandom;
+use rand::thread_rng;
 use rand::Rng;
 use serde_derive::{Deserialize, Serialize};
 
@@ -322,6 +324,8 @@ fn extract_links(page: &no_browser::page::Page, cfg: &RunConfig) -> Vec<String> 
             result.push(link);
         }
     }
+
+    result.shuffle(&mut thread_rng());
 
     result
 }
