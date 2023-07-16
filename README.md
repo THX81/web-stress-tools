@@ -16,6 +16,11 @@ Generally, the command line arguments have higher priority and overriding config
 ![Usage](assets/help.png)
 ![Example](assets/demo.png)
 
+## Supported targets
+
+* x86_64-unknown-linux-gnu
+* x86_64-pc-windows-gnu 
+
 ## About
 
 Main purpose of this app is to help with stress testing and also for me to learn Rust language. 
