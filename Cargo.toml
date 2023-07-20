@@ -1,6 +1,6 @@
 [package]
 name = "web-stress-tools"
-version = "0.5.6"
+version = "0.5.7"
 authors = ["Richard Straka <richard.straka@gmail.com>"]
 edition = "2021"
 description = "Generating synthetic web traffic for your app to help with benchmarking and debuging of performance issues."
