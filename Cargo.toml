@@ -1,10 +1,12 @@
 [package]
 name = "web_stress_tools"
-version = "0.5.8"
+version = "0.5.9"
 authors = ["Richard Straka <richard.straka@gmail.com>"]
 license = "MIT OR Apache-2.0"
 edition = "2021"
 description = "Console app for generating synthetic web traffic for your web app to help with benchmarking and debuging of performance issues."
+keywords = ["dev", "web", "stress", "tool", "cli"]
+categories = ["command-line-utilities", "development-tools", "development-tools::testing"]
 homepage = "https://github.com/THX81/web_stress_tools"
 repository = "https://github.com/THX81/web_stress_tools"
 
