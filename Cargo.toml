@@ -2,6 +2,7 @@
 name = "web-stress-tools"
 version = "0.5.7"
 authors = ["Richard Straka <richard.straka@gmail.com>"]
+license = "MIT OR Apache-2.0"
 edition = "2021"
 description = "Generating synthetic web traffic for your app to help with benchmarking and debuging of performance issues."
 
