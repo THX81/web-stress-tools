@@ -32,7 +32,9 @@ I want to keep it simple as WGET is but also introduce advanced features like pa
 I've faced problems with rust headless_chrome so the initial version is using simple web requests to the server. 
 Adding headless chrome or different engine is the main goal for the future version. 
 
-## TO-DO
+## Roadmap
 
-* Logging
-* Capability to process client side scripts and styling. Possible headless chrome or other methods. 
+I'm not planning to add more functionality. 
+The tool is helpful to me as it is, and I've learned a bit about Rust as well. 
+There are definitely some small bugs or space for improvement. I'm happy to fix bugs If anyone will use the tool and report it.
+
