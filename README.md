@@ -1,4 +1,4 @@
-# web-stress-tools
+# web_stress_tools
 Easy to use console application for web application stress testing.
 Inspired by WGET. 
 
