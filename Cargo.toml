@@ -5,6 +5,8 @@ authors = ["Richard Straka <richard.straka@gmail.com>"]
 license = "MIT OR Apache-2.0"
 edition = "2021"
 description = "Console app for generating synthetic web traffic for your web app to help with benchmarking and debuging of performance issues."
+homepage = "https://github.com/THX81/web_stress_tools"
+repository = "https://github.com/THX81/web_stress_tools"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
