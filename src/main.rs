@@ -12,14 +12,15 @@ mod simple_browser;
 
 fn main() -> Result<(), ::std::io::Error> {
     let term = Term::stdout();
-    term.clear_screen().unwrap();
+    term.clear_screen()?;
 
     let cfg: config::RunConfig = config::get_config();
 
     let started = Instant::now();
     let spinner_style =
-        ProgressStyle::with_template("{prefix:.bold.dim} {spinner:.green} {wide_msg}").unwrap();
-    let msg_style = ProgressStyle::with_template("{wide_msg}").unwrap();
+        ProgressStyle::with_template("{prefix:.bold.dim} {spinner:.green} {wide_msg}")
+            .expect("Expected style!");
+    let msg_style = ProgressStyle::with_template("{wide_msg}").expect("Expected style!");
 
     let mut thread_handles = Vec::<Option<JoinHandle<()>>>::new();
 
@@ -44,7 +45,7 @@ fn main() -> Result<(), ::std::io::Error> {
     }
 
     let bottom_pb = m.add(ProgressBar::new(10000));
-    bottom_pb.set_style(msg_style.clone());
+    bottom_pb.set_style(msg_style);
     bottom_pb.set_message("press CTRL+C or 'q' for exit ...");
     bottom_pb.inc(1);
 
@@ -55,14 +56,14 @@ fn main() -> Result<(), ::std::io::Error> {
         }
     }
 
-    while thread_handles.len() > 0 {
+    while !thread_handles.is_empty() {
         let cur_thread = thread_handles.remove(0); // moves it into cur_thread
-        let r = cur_thread.unwrap().join();
+        let r = cur_thread.expect("Expected thread!").join();
         handle_thread_result(r);
     }
 
     bottom_pb.finish_and_clear();
-    println!("{} Done in {}", "*", HumanDuration(started.elapsed()));
+    println!("* Done in {}", HumanDuration(started.elapsed()));
     Ok(())
 }
 
@@ -79,18 +80,21 @@ fn wait_for_quitkey(mut term: &Term) -> bool {
     if key == 'q' {
         return true;
     }
-    return false;
+    false
 }
 
 fn handle_thread_result(r: thread::Result<()>) {
     match r {
         Ok(_) => (),
         Err(e) => {
-            if let Some(e) = e.downcast_ref::<&'static str>() {
-                println!("Got an error: {}", e);
-            } else {
-                println!("Got an unknown error: {:?}", e);
-            }
+            e.downcast_ref::<&'static str>().map_or_else(
+                || {
+                    println!("Got an unknown error: {:?}", e);
+                },
+                |e| {
+                    println!("Got an error: {}", e);
+                },
+            );
         }
     }
 }

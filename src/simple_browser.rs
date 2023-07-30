@@ -22,11 +22,16 @@ pub fn browse(pb: &ProgressBar, cfg: &config::RunConfig) -> Result<(), Box<dyn E
     loop {
         index += 1;
 
-        if let Some(url) = &cfg.url {
-            browse_recursive(url, depth, &browser, &pb, &cfg);
-        } else if let Some(url_list) = &cfg.url_list {
-            browse_list(url_list, &browser, &pb, &cfg);
-        }
+        cfg.url.as_ref().map_or_else(
+            || {
+                if let Some(url_list) = &cfg.url_list {
+                    browse_list(url_list, &browser, pb, cfg);
+                }
+            },
+            |url| {
+                browse_recursive(url, depth, &browser, pb, cfg);
+            },
+        );
 
         pb.inc(1);
 
@@ -71,7 +76,7 @@ fn browse_recursive(
 
     wait_with_random(cfg.config.wait_ms);
 
-    let links = html_helper::extract_links(&page.unwrap(), &cfg);
+    let links = html_helper::extract_links(&page.expect("Expected page!"), cfg);
 
     pb.set_message(format!("found {} links", links.len()));
     pb.inc(1);
@@ -79,7 +84,7 @@ fn browse_recursive(
     pb.inc(1);
 
     for link in links {
-        browse_recursive(&link, next_depth, &browser, &pb, &cfg);
+        browse_recursive(&link, next_depth, browser, pb, cfg);
     }
 }
 
