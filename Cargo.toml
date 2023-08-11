@@ -1,6 +1,6 @@
 [package]
 name = "web_stress_tools"
-version = "0.5.10"
+version = "0.6.0"
 authors = ["Richard Straka <richard.straka@gmail.com>"]
 license = "MIT OR Apache-2.0"
 edition = "2021"
@@ -11,6 +11,14 @@ homepage = "https://github.com/THX81/web_stress_tools"
 repository = "https://github.com/THX81/web_stress_tools"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[profile.release]
+strip = true  # Automatically strip symbols from the binary. By default on Linux and macOS, symbol information is included in the compiled .elf file.
+opt-level = "z"  # Optimize for size. Cargo defaults its optimization level to 3 for release builds, which optimizes the binary for speed.
+lto = true # LTO instructs the linker to optimize at the link stage. This can, for example, remove dead code and often times reduces binary size.
+codegen-units = 1 # Set this to 1 to allow for maximum size reduction optimizations. By default 16 parallel codegen units for release builds.
+panic = "abort" # Abort imediatelly without a message. 
+# additional tips in https://github.com/johnthagen/min-sized-rust
 
 [dependencies]
 addr = "0.15.6"
