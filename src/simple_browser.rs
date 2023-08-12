@@ -74,16 +74,13 @@ fn browse_recursive(
         return;
     }
 
-    wait_with_random(cfg.config.wait_ms);
-
     let links = html_helper::extract_links(&page.expect("Expected page!"), cfg);
 
     pb.set_message(format!("found {} links", links.len()));
     pb.inc(1);
-    wait_with_random(500);
-    pb.inc(1);
 
     for link in links {
+        wait_with_random(cfg.config.wait_ms);
         browse_recursive(&link, next_depth, browser, pb, cfg);
     }
 }
